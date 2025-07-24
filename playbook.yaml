@@ -1,0 +1,15 @@
+- hosts: webservers
+  become: true
+  tasks:
+    - name: Run the equivalent of "apt update" as a separate step
+      apt:
+        update_cache: yes
+    - name: Install latest version of nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+    - name: Autostart nginx
+      service:
+        name: nginx
+        enabled: yes
+        state: started

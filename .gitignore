@@ -1,0 +1,6 @@
+.terraform/
+cloud-init.yml
+.terraform.lock.hcl
+hosts.ini
+terraform.tfstate
+terraform.tfstate.backup
