@@ -100,3 +100,22 @@ resource "yandex_vpc_security_group" "web_sg" {
 
 
 }
+
+resource "yandex_vpc_security_group" "zabbix" {
+  name       = "zabbix-sg"
+  network_id = yandex_vpc_network.develop.id
+  ingress {
+    description    = "Allow 0.0.0.0/0"
+    protocol       = "TCP"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 10050
+  }
+  egress {
+    description    = "Permit ANY"
+    protocol       = "ANY"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 0
+    to_port        = 65535
+  }
+
+}

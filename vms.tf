@@ -81,7 +81,7 @@ resource "yandex_compute_instance" "web_b" {
   zone        = "ru-central1-b" #зона ВМ должна совпадать с зоной subnet!!!
 
   resources {
-    cores         = var.test.cores
+    cores         = 2
     memory        = 1
     core_fraction = 20
   }
@@ -148,10 +148,47 @@ resource "yandex_lb_network_load_balancer" "web_nlb" {
   }
 }
 
+resource "yandex_compute_instance" "zabbix" {
+  name        = "zabbix" #Имя ВМ в облачной консоли
+  hostname    = "zabbix" #формирует FDQN имя хоста, без hostname будет сгенрировано случаное имя.
+  platform_id = "standard-v3"
+  zone        = "ru-central1-a" #зона ВМ должна совпадать с зоной subnet!!!
+
+  resources {
+    cores         = 2
+    memory        = 1
+    core_fraction = 20
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu_2204_lts.image_id
+      type     = "network-hdd"
+      size     = 10
+    }
+  }
+
+  metadata = {
+    user-data          = file("./cloud-init.yml")
+    serial-port-enable = 1
+  }
+
+  scheduling_policy { preemptible = true }
+
+  network_interface {
+    subnet_id          = yandex_vpc_subnet.develop_a.id #зона ВМ должна совпадать с зоной subnet!!!
+    nat                = true
+    security_group_ids = [yandex_vpc_security_group.LAN.id, yandex_vpc_security_group.zabbix.id]
+  }
+}
+
 resource "local_file" "inventory" {
   content  = <<-XYZ
   [bastion]
   ${yandex_compute_instance.bastion.network_interface.0.nat_ip_address}
+
+  [zabbix]
+  ${yandex_compute_instance.zabbix.network_interface.0.nat_ip_address}
 
   [webservers]
   ${yandex_compute_instance.web_a.network_interface.0.ip_address}

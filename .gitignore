@@ -1,6 +1,7 @@
 .terraform/
 cloud-init.yml
 .terraform.lock.hcl
+ansible.cfg
 hosts.ini
 terraform.tfstate
 terraform.tfstate.backup

@@ -1,0 +1,15 @@
+- hosts: zabbix
+  become: true
+  tasks:
+    - name: Run the equivalent of "apt update" as a separate step
+      apt:
+        update_cache: yes
+    - name: Install latest version of postgres
+      ansible.builtin.apt:
+        name: postgresql
+        state: latest
+    - name: Autostart postgresql
+      service:
+        name: postgresql
+        enabled: yes
+        state: started

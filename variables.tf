@@ -7,12 +7,3 @@ variable "folder_id" {
   default = "b1g25aqtihsjrqvi6v5p"
 }
 
-variable "test" {
-  type = map(number)
-  default = {
-    cores         = 2
-    memory        = 1
-    core_fraction = 20
-  }
-}
-
