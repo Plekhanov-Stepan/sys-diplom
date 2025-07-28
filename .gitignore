@@ -3,5 +3,7 @@ cloud-init.yml
 .terraform.lock.hcl
 ansible.cfg
 hosts.ini
+index.html.j2
 terraform.tfstate
 terraform.tfstate.backup
+zabbix-release_latest_6.0+ubuntu22.04_all.deb

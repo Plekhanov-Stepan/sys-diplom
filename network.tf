@@ -97,7 +97,13 @@ resource "yandex_vpc_security_group" "web_sg" {
     port           = 80
     v4_cidr_blocks = ["0.0.0.0/0"]
   }
-
+  ingress {
+    description    = "Allow zabbix"
+    protocol       = "TCP"
+    from_port      = 10050
+    to_port        = 10051
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
 
 }
 
@@ -108,7 +114,7 @@ resource "yandex_vpc_security_group" "zabbix" {
     description    = "Allow 0.0.0.0/0"
     protocol       = "TCP"
     v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = 10050
+    port           = 80
   }
   egress {
     description    = "Permit ANY"

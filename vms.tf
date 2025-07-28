@@ -156,7 +156,7 @@ resource "yandex_compute_instance" "zabbix" {
 
   resources {
     cores         = 2
-    memory        = 1
+    memory        = 2
     core_fraction = 20
   }
 
@@ -188,7 +188,9 @@ resource "local_file" "inventory" {
   ${yandex_compute_instance.bastion.network_interface.0.nat_ip_address}
 
   [zabbix]
-  ${yandex_compute_instance.zabbix.network_interface.0.nat_ip_address}
+  ${yandex_compute_instance.zabbix.network_interface.0.ip_address}
+  [zabbix:vars]
+  ansible_ssh_common_args='-o ProxyCommand="ssh -p 22 -W %h:%p -q plekhas@${yandex_compute_instance.bastion.network_interface.0.nat_ip_address}"'
 
   [webservers]
   ${yandex_compute_instance.web_a.network_interface.0.ip_address}
