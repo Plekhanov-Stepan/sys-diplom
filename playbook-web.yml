@@ -1,77 +1,33 @@
-- hosts: webservers
+# This playbook will install web servers
+- name: Install web servers
+  hosts: webservers
   become: true
-  vars:
-    # hosts.ini [zabbix]
-    zabbix_server: 10.0.1.25  
+  vars_files:
+    - ./variables.yml
   tasks:
     - name: Run the equivalent of "apt update" as a separate step
-      apt:
+      apt: 
         update_cache: yes
+    
     - name: Install latest version of nginx
-      ansible.builtin.apt:
-        name: nginx
+      apt:  
+        name: nginx 
         state: latest
+    
     - name: Autostart nginx
       service:
         name: nginx
         enabled: yes
         state: started
+    
     - name: Copy new start page to web-server
       copy:
         src: index.html
         dest: /var/www/html/index.html
+    
     # restart nginx to apply changes
     - name: restart nginx
       systemd:
         name: nginx
-        state: restarted
-        enabled: yes
-    # download zabbix repo
-    - name: wget zabbix repo
-      get_url:
-        url:  https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_6.0+ubuntu22.04_all.deb
-        dest: /tmp/zabbix-release_latest_6.0+ubuntu22.04_all.deb
-
-    # install zabbix repo
-    - name: install zabbix repo
-      apt: deb=/tmp/zabbix-release_latest_6.0+ubuntu22.04_all.deb state=present
-
-    # update apt cache
-    - name: apt update
-      apt: update_cache=yes
-
-    # install zabbix-agent
-    - name: install zabbix-agent
-      apt: name=zabbix-agent state=present
-
-    # modify zabbix agent config
-    - name: set zabbix agent config
-      lineinfile:
-        path: /etc/zabbix/zabbix_agentd.conf
-        regexp: '^Server='
-        line: 'Server={{ zabbix_server }}'
-        state: present
-        backup: yes
-
-    # start zabbix agent
-    - name: start zabbix agent
-      systemd:
-        name: zabbix-agent
-        state: started
-        enabled: yes
-
-    # modify zabbix agent config
-    - name: set zabbix agent config
-      lineinfile:
-        path: /etc/zabbix/zabbix_agentd.conf
-        regexp: '^Server='
-        line: 'Server={{ zabbix_server }}'
-        state: present
-        backup: yes
-
-    # restart apache2 to apply changes
-    - name: restart zabbix-agent
-      systemd:
-        name: zabbix-agent
         state: restarted
         enabled: yes

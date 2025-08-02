@@ -1,0 +1,12 @@
+EXTERNAL:
+bastion: 158.160.48.175
+zabbix: 62.84.116.214
+kibana: 158.160.103.50
+  
+INTERNAL:
+bastion: 10.0.1.31
+zabbix: 10.0.1.25
+elastic: 10.0.1.9
+kibana: 10.0.1.28
+web-a: 10.0.1.21
+web-b: 10.0.2.32

@@ -97,14 +97,32 @@ resource "yandex_vpc_security_group" "web_sg" {
     port           = 80
     v4_cidr_blocks = ["0.0.0.0/0"]
   }
+
+}
+
+resource "yandex_vpc_security_group" "alb_sg" {
+  name       = "alb-sg"
+  network_id = yandex_vpc_network.develop.id
+
   ingress {
-    description    = "Allow zabbix"
-    protocol       = "TCP"
-    from_port      = 10050
-    to_port        = 10051
+    description    = "Allow HTTP"
+    protocol       = "ANY"
+    port           = 80
     v4_cidr_blocks = ["0.0.0.0/0"]
   }
-
+  ingress {
+    description    = "Allow healthcheck"
+    protocol       = "TCP"
+    port           = 30080
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    description    = "Permit ANY"
+    protocol       = "ANY"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 0
+    to_port        = 65535
+  }
 }
 
 resource "yandex_vpc_security_group" "zabbix" {
@@ -124,4 +142,40 @@ resource "yandex_vpc_security_group" "zabbix" {
     to_port        = 65535
   }
 
+}
+
+resource "yandex_vpc_security_group" "elastic" {
+  name       = "elastic-sg"
+  network_id = yandex_vpc_network.develop.id
+  ingress {
+    description    = "Allow 0.0.0.0/0"
+    protocol       = "TCP"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 9200
+  }
+  egress {
+    description    = "Permit ANY"
+    protocol       = "ANY"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 0
+    to_port        = 65535
+  }
+}
+
+resource "yandex_vpc_security_group" "kibana" {
+  name       = "kibana-sg"
+  network_id = yandex_vpc_network.develop.id
+  ingress {
+    description    = "Allow 0.0.0.0/0"
+    protocol       = "TCP"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 5601
+  }
+  egress {
+    description    = "Permit ANY"
+    protocol       = "ANY"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 0
+    to_port        = 65535
+  }
 }

@@ -1,0 +1,4 @@
+elastic_server: 10.0.1.9
+kibana_server: 10.0.1.28
+zabbix_server: 10.0.1.25
+ansible_ssh_common_args: '-o ProxyCommand="ssh -p 22 -W %h:%p -q plekhas@158.160.48.175"'

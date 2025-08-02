@@ -1,0 +1,72 @@
+# This playbook will install Kibana
+- name: Install Kibana
+  hosts: kibana-server
+  become: yes
+  vars_files:
+    - ./variables.yml
+  tasks:
+  # установка зависимостей
+  - name: apt update
+    apt:  
+      update_cache: yes
+
+  - name: install gnupg
+    apt: 
+      name: gnupg 
+      state: present
+  
+  - name: install apt-transport-https
+    apt: 
+      name: apt-transport-https 
+      state: present
+  
+  # download Kibana
+  - name: wget Kibana
+    get_url:
+      url: https://mirror.yandex.ru/mirrors/elastic/8/pool/main/k/kibana/kibana-8.19.0-amd64.deb
+      dest: /tmp/kibana-8.19.0-amd64.deb
+
+  # install Kibana
+  - name: install Kibana
+    apt: deb=/tmp/kibana-8.19.0-amd64.deb state=present
+      
+  - name: Reload service systemd
+    systemd:
+      daemon_reload: yes
+
+  # start Kibana server
+  - name: Start Kibana Server
+    systemd:
+      name: kibana
+      state: started
+      enabled: yes
+
+  # modify Kibana server config
+  - name: set kibana server.host
+    lineinfile:
+      path: /etc/kibana/kibana.yml
+      regexp: 'server.host:'
+      line: 'server.host: "0.0.0.0"'
+      state: present
+      backup: yes
+  - name: set kibana server.port
+    lineinfile:
+      path: /etc/kibana/kibana.yml
+      regexp: 'server.port:'
+      line: 'server.port: 5601'
+      state: present
+      backup: yes
+  - name: set kibana elasticsearch.hosts
+    lineinfile:
+      path: /etc/kibana/kibana.yml
+      regexp: 'elasticsearch.hosts:'
+      line: 'elasticsearch.hosts: ["http://{{ elastic_server }}:9200"]'
+      state: present
+      backup: yes
+
+  # restart Kibana server to apply changes
+  - name: restart kibana
+    systemd:
+      name: kibana
+      state: restarted
+      enabled: yes

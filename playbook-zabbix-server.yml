@@ -1,8 +1,9 @@
----
-# This playbook will install zabbix server on ubuntu 22.04
+# This playbook will install zabbix server
 - name: Install Zabbix Server
-  hosts: zabbix
+  hosts: zabbix-server
   become: yes
+  vars_files:
+    - ./variables.yml
   vars:
   # creation of mysql root password and zabbix database password
     mariadb_zabbix_password: 123456789
@@ -16,47 +17,75 @@
 
   # install zabbix repo
   - name: install zabbix repo
-    apt: deb=/tmp/zabbix-release_latest_6.0+ubuntu22.04_all.deb state=present
+    apt: 
+      deb: /tmp/zabbix-release_latest_6.0+ubuntu22.04_all.deb 
+      state: present
 
   # update apt cache
   - name: apt update
-    apt: update_cache=yes
+    apt: 
+      update_cache: yes
 
   # install zabbix server
   - name: install zabbix-server-mysql
-    apt: name=zabbix-server-mysql state=present
+    apt: 
+      name: zabbix-server-mysql 
+      state: present
 
   # install zabbix-frontend-php
   - name: install zabbix-frontend-php
-    apt: name=zabbix-frontend-php state=present
+    apt: 
+      name: zabbix-frontend-php 
+      state: present
 
   # install zabbix-apache-conf
   - name: install zabbix-apache-conf
-    apt: name=zabbix-apache-conf state=present
+    apt: 
+      name: zabbix-apache-conf 
+      state: present
 
   # install zabbix-sql-scripts
   - name: install zabbix-sql-scripts
-    apt: name=zabbix-sql-scripts state=present
+    apt: 
+      name: zabbix-sql-scripts 
+      state: present
 
   # install zabbix-agent
   - name: install zabbix-agent
-    apt: name=zabbix-agent state=present
+    apt: 
+      name: zabbix-agent 
+      state: present
 
   # install apache2
   - name: install apache2
-    apt: name=apache2 state=present
+    apt: 
+      name: apache2 
+      state: present
 
   # install mariadb-server
   - name: install mariadb-server
-    apt: name=mariadb-server state=present
+    apt: 
+      name: mariadb-server 
+      state: present
 
   # install mariadb-client
   - name: install mariadb-client
-    apt: name=mariadb-client state=present
+    apt: 
+      name: mariadb-client 
+      state: present
 
   # install python3-pymysql
   - name: install python3-pymysql
-    apt: name=python3-pymysql state=present
+    apt: 
+      name: python3-pymysql 
+      state: present
+
+  # start mariadb server
+  - name: Start Maria DB Server
+    systemd:
+      name: mariadb
+      state: started
+      enabled: yes
 
   # start mariadb server
   - name: Start Maria DB Server

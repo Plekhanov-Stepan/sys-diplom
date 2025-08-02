@@ -1,0 +1,8 @@
+- name: test connections
+  hosts: all
+  become: yes
+  vars_files:
+    - ./variables.yml
+  tasks:
+    - name: test connection
+      ping:
