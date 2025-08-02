@@ -5,14 +5,14 @@
 ## Решение
 В рамках решения задачи были использованы механизмы создания инфраструктуры как кода (IaC) Terraform и Ansible. Конфигурация инфраструктуры хранится в файлах network.tf и vms.tf.
 В результате была создана следующая структура объектов в YandexCloud:
-<img src = "img/Screenshot_1.png" width=100%>
+<img src = "img/Screenshot_01.png" width=100%>
 Инфраструктура включает 6 виртуальных машин:
 
-<img src = "img/Screenshot_2.png" width=100%>
+<img src = "img/Screenshot_02.png" width=100%>
 
 Так же создана одна облачная сеть с двумя подсетями в разных зонах:
 
-<img src = "img/Screenshot_3.png" width=100%>
+<img src = "img/Screenshot_03.png" width=100%>
 
 На двух виртуальных машинах, размещенных в разных подсетях размещен тестовый сайт:
 
@@ -20,19 +20,19 @@
 
 Виртуальные машины объединены в целевую группу:
 
-<img src = "img/Screenshot_4.png" width=100%>
+<img src = "img/Screenshot_04.png" width=100%>
 
 Так же создана бэкенд группа, которая ссылается на целевую группу:
 
-<img src = "img/Screenshot_5.png" width=100%>
+<img src = "img/Screenshot_05.png" width=100%>
 
 И HTTP-роутер:
 
-<img src = "img/Screenshot_6.png" width=100%>
+<img src = "img/Screenshot_06.png" width=100%>
 
 Создан балансировщик нагрузки, размещенный в публичном сегменте и имеющий внешний адрес для доступа пользователей сайта:
 
-<img src = "img/Screenshot_7.png" width=100%>
+<img src = "img/Screenshot_07.png" width=100%>
 
 Для мониторинга состояния виртуальных машин создан Zabbix сервер, а на всех ВМ установлены агенты, которые передают информацию на сервер:
 
