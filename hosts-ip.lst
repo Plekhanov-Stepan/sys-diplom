@@ -1,7 +1,7 @@
 EXTERNAL:
-bastion: 158.160.48.175
-zabbix: 62.84.116.214
-kibana: 158.160.103.50
+bastion: 158.160.58.37
+zabbix: 158.160.49.30
+kibana: 89.169.156.72
   
 INTERNAL:
 bastion: 10.0.1.31
